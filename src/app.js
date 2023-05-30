@@ -13,7 +13,7 @@ app.post("/properties", celebrate({
     address: Joi.string().required(),
     title: Joi.string().required(),
     img: Joi.string().required(),
-    askingPrice: Joi.number().min(0).required()
+    askingPrice: Joi.number().min(0).required(),
   }),
 }),
 
