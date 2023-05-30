@@ -1,12 +1,23 @@
 const mongoose = require("mongoose");
 const express = require("express");
+const { celebrate, Joi, errors, Segments } = require("celebrate");
 const app = express();
 const PropertyModel = require("./models/PropertyModel");
 const formatProperty = require("./formatProperty");
 
 app.use(express.json());
 
-app.post("/properties", async (req, res, next) => {
+app.post("/properties", celebrate({
+  [Segments.BODY]: Joi.object().keys({
+    description: Joi.string().required(),
+    address: Joi.string().required(),
+    title: Joi.string().required(),
+    img: Joi.string().required(),
+    askingPrice: Joi.number().min(0).required()
+  }),
+}),
+
+async (req, res, next) => {
   try {
     const { body } = req;
     const property = new PropertyModel(body);
@@ -40,5 +51,7 @@ app.get("/properties/:id", async (req, res) => {
 
   return res.status(200).send(formatProperty(property));
 });
+
+app.use(errors());
 
 module.exports = app;
